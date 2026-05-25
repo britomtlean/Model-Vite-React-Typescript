@@ -8,12 +8,14 @@ import App from './App.tsx';
 import Ref from './components/Ref.tsx';
 import Search from './components/Search.tsx';
 import State from './components/State.tsx';
+import SignalR from './components/SignalR.tsx';
 //CONTEXT
 import { ContextProvider } from './context/ContextProvider';
 import Effect from './components/Effect.tsx';
 import DadosAPI from './components/DadosAPI.tsx';
 import Socket from './components/Socket.tsx';
 import Calculos from './components/Calculos.tsx';
+import Delivery from './components/Delivery.tsx';
 
 let router = createBrowserRouter([
     {
@@ -43,6 +45,14 @@ let router = createBrowserRouter([
             {
                 path: '/socket/',
                 element: <Socket />,
+            },
+            {
+                path: '/signalr/',
+                element: <SignalR />,
+            },
+            {
+                path: '/delivery/',
+                element: <Delivery />,
             },
             {
                 path: '/calculos',

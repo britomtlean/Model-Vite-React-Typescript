@@ -7,7 +7,7 @@ export default class Socket {
     static connection(user: string): void {
         if (!this.socket) {
             if (!this.socket) {
-                this.socket = io('http://localhost:3000', {
+                this.socket = io('localhost:3000', {
                     transports: ['websocket'], // força websocket
                     withCredentials: true,
                 });
@@ -30,13 +30,15 @@ export default class Socket {
         }
 
         if (this.socket.connected) {
-            this.socket.emit('message', {
+            this.socket.emit('message',
+                {
                 id: this.socket.id,
                 user: user,
                 message: message,
                 data: new Date(),
                 send: send,
-            });
+                }
+            );
         } else {
             this.socket.once('connect', () => {
                 this.socket.emit('message', {

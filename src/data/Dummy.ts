@@ -1,18 +1,17 @@
 import type { CartResponse } from '../types/CartResponse';
 
 export class Dummy {
-    static getDummy = async (): Promise<CartResponse | null> => {
-        try {
-            const res = await fetch('https://dummyjson.com/carts');
 
-            if (!res.ok) {
-                throw new Error('Erro ao buscar dados');
-            }
+    private static readonly getCartsUrl = 'https://dummyjson.com/carts';
 
-            return res.json();
-        } catch (error) {
-            console.log(error);
-            return null;
+    static getDummy = async (): Promise<CartResponse | never> => {
+
+        const res = await fetch(this.getCartsUrl);
+
+        if (!res.ok) {
+            throw new Error('Erro ao buscar dados');
         }
+
+        return res.json();
     };
 }

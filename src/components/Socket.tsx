@@ -3,37 +3,78 @@ import { useSearchParams } from 'react-router-dom';
 import { Context } from '../context/ContextProvider';
 import WebSocket from '../services/Socket';
 
+
 type User = {
     user: string,
     send: string
 }
 
 const Socket = () => {
+
+    //CONTEXT
+    const { setMessage } = useContext(Context)!;
+
+    //SEARCHPARAMS
     const [searchParams] = useSearchParams();
     const user = searchParams.get('user');
 
-    const { setMessage } = useContext(Context)!;
-
-    const [SendMessage, setSendMessage] = useState<string>('');
+    //INPUT
     const [sendUser, setSendUser] = useState<string>('');
+    const [SendMessage, setSendMessage] = useState<string>('');
 
-    const [privChat, setPrivChat] = useState<Array<object> | null>(null);
+    ////////////////////////////// STORAGE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+    const storage = localStorage.getItem(`prive_${user}`);
+
+    // VERIFICA SE POSSUI MENSAGENS NO STORAGE
+    if (!storage)
+    {
+        localStorage.setItem(`prive_${user}`, '[]');
+        console.log('store null', storage);
+    }
+
+    // EXIBE MENSAGENS
+    const storageArray: Array<object> = JSON.parse(storage!);
+    //console.log('Mensagens: ', storageArray);
+
+    const [privChat, setPrivChat] = useState<Array<object>>([{}]);
+
+    ////////////////////////////////////////////////////////////////////////
 
     useEffect(() => {
 
-        setMessage("Socket.IO")
+        setMessage('Socket.IO');
+        setPrivChat(storageArray);
 
-        console.log(privChat);
-        WebSocket.connection(user!); //REALIZA CONEXÃO
+        //REALIZA CONEXÃO
+        WebSocket.connection(user!);
 
-        WebSocket.getSocket(
-            (msg) => {
-                console.log('Mensagem recebida: ', msg);
+        // RECEBE MENSAGENS
+        WebSocket.getSocket((msg) => {
+            console.log('Mensagem recebida: ', msg);
 
+            //FRONT RECEBE UM OBJETO COMO MENSAGEM
+
+            setPrivChat((prev) => {
+                let updated = [...prev, msg];
+
+                localStorage.setItem(`prive_${user}`, JSON.stringify(updated));
+
+                const storage = localStorage.getItem(`prive_${user}`);
+                console.log('storage: ', JSON.parse(storage!));
+                updated = JSON.parse(storage!);
+
+                return updated;
+            });
+
+            // console.log('privChat: ',privChat)
+
+            /*FRONT RECEBE MSG COMO ARRAY DE OBJETO
                 const users: Array<User> = msg.map((array: any) => ({
                     user: array.user,
                     send: array.send,
                 }));
+
 
                 const isPrivate = users[0]?.send === user || users[0]?.user === user;
 
@@ -64,11 +105,12 @@ const Socket = () => {
                         console.log('privChat Ok');
                     }
                 }
+            */
+        });
 
-                console.log(privChat);
-            }
-        );
     }, []);
+
+
 
     return (
         <>
@@ -84,14 +126,15 @@ const Socket = () => {
                     <h1 className="font-semibold text-black!">Chat</h1>
                 </label>
 
-                <input
-                    type="text"
-                    placeholder="Digite para quem você quer enviar a mensagem"
-                    value={sendUser}
-                    className="bg-gray-300 border rounded-[10px] p-2 w-full"
-                    required
-                    onChange={(e) => setSendUser(e.target.value)}
-                />
+                <select onChange={(e) => {
+                        const value = e.target.value;
+                        setSendUser(value);
+                        console.log(value);
+                    }} className="bg-white mb-4 p-1.5">
+                    <option value="Matheus">Matheus</option>
+                    <option value="Rodrigo">Rodrigo</option>
+                    <option value="Leandro">Leandro</option>
+                </select>
 
                 <input
                     type="text"
@@ -107,12 +150,12 @@ const Socket = () => {
 
             <h1 className="text-[2rem]! text-black! my-3">Mensagens</h1>
 
-            <div className="flex flex-col items-center w-[40vw] max-h-[300px] overflow-y-scroll">
-                {!privChat
+            <div className="flex flex-col-reverse items-center w-[40vw] max-h-[300px] overflow-y-scroll">
+                {!privChat || privChat.length === 0
                     ? 'Não há mensagens disponíveis'
                     : privChat?.map((msg: any, index: number) => (
                           <ul
-                              className="w-full flex flex-col justify-center items-center bg-slate-400/60 border-b p-4 rounded-[12px]"
+                              className="w-[80%] flex flex-col justify-center items-center bg-slate-200/60 border-b p-4 rounded-[12px]"
                               key={index}
                           >
                               <li className="font-semibold">{msg.user}</li>

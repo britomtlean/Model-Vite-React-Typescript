@@ -24,3 +24,33 @@
                             //setPrivChat((prev)=>([...prev!, msg]));
                             setPrivChat(chat);
                         }
+
+
+-- SIGNALR --
+
+const [connection, setConnection] = useState<HubConnection | null>(null); -- Variavel para receber
+
+const newConnection = new HubConnectionBuilder()
+    .withUrl('http://localhost:5157/chat')
+    .withAutomaticReconnect()
+    .build(); -- Configura conexão
+
+connection
+    .start()
+    .then(() => {
+        console.log('✅ Conectado ao SignalR');
+
+        // ESCUTA MENSAGEM DO SERVIDOR
+        connection.on('ReceiveMessage', (message: Message) => {
+            console.log('📩 Mensagem recebida:', message);
+        });
+    })
+    .catch((err) => {
+        console.error('Erro na conexão:', err);
+    }); -- INICIA CONEXÃO
+
+return () => {
+    connection.stop();
+};
+
+connection.invoke('FunctionName', message); -- enviar mensagem

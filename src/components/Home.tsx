@@ -28,23 +28,17 @@ const Home = ({ nome, id, children }: Props) => {
                     <FaBeer className="text-5xl text-white" />
                 </h1>
                 <nav className="flex justify-between gap-6">
-                    <Link className="bg-slate-300 p-2 rounded-2xl w-25 text-center" to={'/ref'}>
-                        Ref
-                    </Link>
-                    <Link className="bg-slate-300 p-2 rounded-2xl w-25 text-center" to={'/state'}>
-                        State
-                    </Link>
-                    <Link className="bg-slate-300 p-2 rounded-2xl w-25 text-center" to={'/effect'}>
-                        Effect
-                    </Link>
-                    <Link className="bg-slate-300 p-2 rounded-2xl w-25 text-center" to={'/search'}>
-                        Search
-                    </Link>
                     <Link className="bg-slate-300 p-2 rounded-2xl w-25 text-center" to={'/api/dadosapi'}>
                         Dados API
                     </Link>
                     <Link className="bg-slate-300 p-2 rounded-2xl w-25 text-center" to={`/socket/?user=${nome}`}>
                         Socket
+                    </Link>
+                    <Link className="bg-slate-300 p-2 rounded-2xl w-25 text-center" to={`/signalr`}>
+                        SignalR
+                    </Link>
+                    <Link className="bg-slate-300 p-2 rounded-2xl w-25 text-center" to={`/delivery`}>
+                        Delivery
                     </Link>
                 </nav>
                 <ul className="flex flex-row gap-4 items-center justify-center text-white font-black">

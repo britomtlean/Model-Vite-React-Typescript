@@ -8,6 +8,10 @@ const Effect = () => {
     setMessage('useEffect')
 
     useEffect(() => {
+        console.log('renderizou')
+    }, []);
+
+    useEffect(() => {
 
         const interval =  setInterval(() => {
             setCount(count + 1);

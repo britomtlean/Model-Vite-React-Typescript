@@ -51,14 +51,14 @@ let router = createBrowserRouter([
                 element: <SignalR />,
             },
             {
-                path: '/delivery/',
-                element: <Delivery />,
-            },
-            {
                 path: '/calculos',
                 element: <Calculos />,
             },
         ],
+    },
+    {
+        path: '/delivery/',
+        element: <Delivery />,
     },
 ]);
 

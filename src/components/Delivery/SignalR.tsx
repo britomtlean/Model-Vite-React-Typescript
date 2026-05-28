@@ -1,7 +1,6 @@
 import { useEffect, useState, useContext } from 'react';
-import { Context } from '../context/ContextProvider';
+import { Context } from '../../context/ContextProvider';
 import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
-//import  PedidoForm from './PedidoForm';
 
 type Message = {
     user: string;
@@ -25,20 +24,17 @@ type Pedido = {
 };
 
 function SignalR() {
-
     //CONTEXT
     const { setMessage } = useContext(Context)!;
 
     //WHATSAPP -- IDENTIFICADOR DO CLIENTE NO SIGNALR
     const [contato, setContato] = useState<string | null>(null);
 
-
     // 1 - CRIAR STATE PARA RECEBER CONEXÃO
     const [connection, setConnection] = useState<HubConnection | null>(null);
 
     // 2 - CONFIGURAR CONEXÃO APÓS PRIMEIRA RENDERIZAÇÃO
     useEffect(() => {
-
         setMessage('SignalR');
 
         const newConnection = new HubConnectionBuilder()
@@ -60,7 +56,7 @@ function SignalR() {
                 const whatsapp = prompt('Digite seu whatsapp');
                 //connection.invoke('EntrarSala', `${connection.connectionId}`);
                 connection.invoke('EntrarSala', `${whatsapp}`);
-                setContato(whatsapp)
+                setContato(whatsapp);
 
                 // ESCUTA MENSAGEM DO SERVIDOR
                 connection.on('ReceiveMessage', (message: Message) => {

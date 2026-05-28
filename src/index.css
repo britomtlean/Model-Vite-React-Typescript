@@ -34,3 +34,41 @@ button:focus,
 button:focus-visible {
     outline: 4px auto -webkit-focus-ring-color;
 }
+
+
+@keyframes led {
+    0% {
+        color: #ff4800;
+        text-shadow:
+            0 0 8px #ff4800,
+            0 0 16px #ff3b3b;
+    }
+
+    25% {
+        color: #5e3757;
+        text-shadow:
+            0 0 8px #5e3757,
+            0 0 16px #5e3757;
+    }
+
+    50% {
+        color: #370aff;
+        text-shadow:
+            0 0 8px #530aff,
+            0 0 16px #740aff;
+    }
+
+    75% {
+        color: #ff4d6d;
+        text-shadow:
+            0 0 8px #ff4d6d,
+            0 0 16px #ff4d6d;
+    }
+
+    100% {
+        color: #ff3b3b;
+        text-shadow:
+            0 0 8px #ff3b3b,
+            0 0 16px #ff3b3b;
+    }
+}

@@ -24,11 +24,12 @@ type Pedido = {
 };
 
 function SignalR() {
+
     //CONTEXT
-    const { setMessage } = useContext(Context)!;
+    const { setMessage, setContato, contato } = useContext(Context)!;
 
     //WHATSAPP -- IDENTIFICADOR DO CLIENTE NO SIGNALR
-    const [contato, setContato] = useState<string | null>(null);
+    //const [contato, setContato] = useState<string | null>(null);
 
     // 1 - CRIAR STATE PARA RECEBER CONEXÃO
     const [connection, setConnection] = useState<HubConnection | null>(null);
@@ -53,15 +54,15 @@ function SignalR() {
             .start()
             .then(() => {
                 console.log('✅ Conectado ao SignalR');
-                const whatsapp = prompt('Digite seu whatsapp');
+                const whatsapp = prompt('Digite seu whatsapp')!;
+                setContato(():any =>{connection.invoke('EntrarSala', `${whatsapp}`); return whatsapp});
                 //connection.invoke('EntrarSala', `${connection.connectionId}`);
-                connection.invoke('EntrarSala', `${whatsapp}`);
-                setContato(whatsapp);
+
 
                 // ESCUTA MENSAGEM DO SERVIDOR
-                connection.on('ReceiveMessage', (message: Message) => {
+                connection.on('ReceiveMessage', (message: string) => {
                     console.log('📩 Servidor - ', message);
-                    alert(message);
+                    setMessage(message)
                 });
             })
             .catch((err) => {
@@ -88,7 +89,7 @@ function SignalR() {
             ],
             valorTotal: 0,
             nomeCliente: 'Teste Cliente 1',
-            contatoCliente: contato as string,
+            contatoCliente: contato,
             enderecoCliente: 'XXXXXXXX',
         };
 
@@ -101,9 +102,23 @@ function SignalR() {
         }
     }
 
+    async function pagamento(){
+        const res = await fetch('http://localhost:5157/api/payment', {
+            method: 'POST',
+        });
+
+        const data = await res.json();
+        window.location.href = data.url;
+
+
+
+    }
+
+
     return (
-        <div>
-            <button onClick={sendMessage}>Enviar mensagem</button>
+        <div className="flex gap-4">
+            <button onClick={pagamento}>Pagar Online</button>
+            <button onClick={sendMessage}>Pagar Na Entrega</button>
         </div>
     );
 }

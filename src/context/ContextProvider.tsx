@@ -10,6 +10,8 @@ export type ContextType = {
     setMessage: React.Dispatch<React.SetStateAction<string>>;
     user: string;
     setUser: React.Dispatch<React.SetStateAction<string>>;
+    contato: string;
+    setContato: React.Dispatch<React.SetStateAction<string>>;
 };
 
 //function createContext<T>(defaultValue: T): React.Context<T>
@@ -25,9 +27,10 @@ export const ContextProvider = ({ children }: PropsWithChildren) => {
     const [status, setStatus] = useState<boolean>(true);
     const [message, setMessage] = useState<string>('Hello Context');
     const [user, setUser] = useState<string>('Default');
+    const [contato, setContato] = useState<string>('');
 
     return (
-        <Context.Provider value={{ theme, setTheme, status, setStatus, message, setMessage, user, setUser }}>
+        <Context.Provider value={{ theme, setTheme, status, setStatus, message, setMessage, user, setUser, contato, setContato }}>
             {children}
         </Context.Provider>
     );

@@ -17,6 +17,8 @@ import DadosAPI from './components/DadosAPI.tsx';
 import Socket from './components/Socket.tsx';
 import Calculos from './components/Calculos.tsx';
 import Carrosel from './components/Delivery/Carrosel.tsx';
+import Sucesso from './components/Delivery/Payment/Sucesso.tsx';
+import Aguarde from './components/Delivery/Payment/Aguarde.tsx';
 
 
 let router = createBrowserRouter([
@@ -51,6 +53,14 @@ let router = createBrowserRouter([
             {
                 path: '/signalr/',
                 element: <SignalR />,
+            },
+            {
+                path: '/sucesso/',
+                element: <Sucesso />,
+            },
+            {
+                path: '/confirmando-pedido/',
+                element: <Aguarde />,
             },
             {
                 path: '/calculos',

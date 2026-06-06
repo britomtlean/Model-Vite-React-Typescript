@@ -1,7 +1,9 @@
 import { useEffect, useState, useRef } from 'react';
 import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
 import somPedido from '../../assets/meme-fail-alert-locran-1-00-01.mp3';
-import Consulta from '../Delivery/Consulta'
+import Pendentes from './Pendentes';
+import Concluido from './Concluido';
+import Carrosel from './Carrosel';
 
 declare global {
     interface Window {
@@ -12,14 +14,14 @@ declare global {
 
 function Delivery() {
 
+    //NAVEGAÇÃO
     const [section, setSection] = useState<string>('live');
 
     /////////////////////// AUDIO \\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-    const [sala, setSala] = useState<string>("");
+    const [sala, setSala] = useState<string>('');
     const [somAtivado, setSomAtivado] = useState(false);
     const audioRef = useRef<HTMLAudioElement | null>(null);
-
 
     const ativarSom = async () => {
         try {
@@ -66,6 +68,7 @@ function Delivery() {
 
     /////////////////////// SIGNALR \\\\\\\\\\\\\\\\\\\\\\\\\\\
 
+    //NOTIFICAÇÃ<O></O>
     const [live, setLive] = useState<Array<Record<string, any>> | null>(null);
 
     // 1 - CRIAR STATE PARA RECEBER CONEXÃO
@@ -73,7 +76,6 @@ function Delivery() {
 
     // 2 - CONFIGURAR CONEXÃO APÓS PRIMEIRA RENDERIZAÇÃO
     useEffect(() => {
-
         const newConnection = new HubConnectionBuilder()
             .withUrl('http://localhost:5157/chat')
             .withAutomaticReconnect()
@@ -97,7 +99,7 @@ function Delivery() {
                 connection.on('ReceiveMessage', (message: any, sala: string) => {
                     console.log('📩 Servidor - ', message);
                     tocarSom();
-                    setSala(sala)
+                    setSala(sala);
                     setLive((prev) => {
                         if (prev == null) {
                             return [message];
@@ -119,29 +121,98 @@ function Delivery() {
 
     /////////////////////////////////////////////////////////////
 
+    /////////////////////////// ACTIONS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+    const confirmOrder = async (pedido: Record<string, any>) => {
+        try {
+            const res = await fetch('http://localhost:5157/api/pedido/confirmar', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(pedido),
+            });
+
+            const data = await res.text();
+
+            if (!res.ok) {
+                throw new Error(data);
+            }
+
+            console.log(data);
+            alert(data);
+
+            setLive((): any => {
+                const atualizarPedidos = live?.filter((array) => array.id != pedido.id);
+                return atualizarPedidos;
+            });
+        } catch (err) {
+            console.error(err);
+            alert('Erro ao enviar pedido');
+        }
+    };
+
+    const cancelOrder = async (pedido: Record<string, any>) => {
+        try {
+            const res = await fetch('http://localhost:5157/api/pedido/cancelar', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(pedido),
+            });
+
+            const data = await res.text();
+
+            if (!res.ok) {
+                throw new Error(data);
+            }
+
+            console.log(data);
+            alert(data);
+
+            setLive((): any => {
+                const atualizarPedidos = live?.filter(
+                    (array) => array.id != pedido.id
+                );
+                return atualizarPedidos;
+            });
+        } catch (err) {
+            console.error(err);
+            alert('Erro ao enviar pedido');
+        }
+    };
+    ///////////////////////////////////////////////////////////
+
     return (
         <div className="h-screen w-full overflow-hidden  bg-gradient-to-b from-[rgb(96,167,167)] to-[rgb(105,168,126)] flex flex-col items-center font-sans">
-            <header className="w-full h-[10vh] py-4 px-[5%] mb-[30px] flex justify-between items-center bg-[rgb(48,83,83)]">
+            <header className="w-full h-[10vh] py-4 px-[20%] mb-[30px] flex justify-between items-center bg-[rgb(48,83,83)]">
                 <h1 className="text-4xl! font-bold text-[#ccc] font-bold">Menu</h1>
 
                 <ul className="flex items-center">
                     <li
                         onClick={() => setSection('live')}
-                        className="ml-[30px] list-none cursor-pointer text-base font-light text-[#ccc] transition-all hover:border-b hover:border-yellow-400 hover:text-yellow-400"
+                        className="ml-[30px] list-none cursor-pointer text-[1.3rem] font-bold! text-[#ccc] transition-all hover:border-b hover:border-red-500 hover:text-red-500"
                     >
-                        Delivery
+                        Live
                     </li>
 
                     <li
-                        onClick={() => setSection('pedidos')}
-                        className="ml-[30px] list-none cursor-pointer text-base font-light text-[#ccc] transition-all hover:border-b hover:border-yellow-400 hover:text-yellow-400"
+                        onClick={() => setSection('pendentes')}
+                        className="ml-[30px] list-none cursor-pointer text-[1.3rem] font-bold! text-[#ccc] transition-all hover:border-b  hover:border-red-500 hover:text-red-500"
                     >
-                        Pedidos
+                        Pendentes
+                    </li>
+
+                    <li
+                        onClick={() => setSection('confirmados')}
+                        className="ml-[30px] list-none cursor-pointer text-[1.3rem] font-bold! text-[#ccc] transition-all hover:border-b  hover:border-red-500 hover:text-red-500"
+                    >
+                        Confirmados
                     </li>
 
                     <li
                         onClick={() => setSection('produtos')}
-                        className="ml-[30px] list-none cursor-pointer text-base font-light text-[#ccc] transition-all hover:border-b hover:border-yellow-400 hover:text-yellow-400"
+                        className="ml-[30px] list-none cursor-pointer text-[1.3rem] font-bold! text-[#ccc] transition-all hover:border-b  hover:border-red-500 hover:text-red-500"
                     >
                         Produtos
                     </li>
@@ -209,48 +280,15 @@ function Delivery() {
                                             <button
                                                 className="flex-1"
                                                 onClick={async () => {
-                                                    setLive((): any => {
-                                                        const atualizarPedidos = live?.filter(
-                                                            (array) => array.id != pedido.id
-                                                        );
-                                                        return atualizarPedidos;
-                                                    });
+                                                    cancelOrder(pedido);
                                                 }}
                                             >
-                                                Remover
+                                                Cancelar
                                             </button>
+
                                             <button
                                                 className="flex-1 bg-[rgb(025,168,106)]!"
-                                                onClick={async () => {
-                                                    try {
-                                                        const res = await fetch('http://localhost:5157/api/pedido', {
-                                                            method: 'POST',
-                                                            headers: {
-                                                                'Content-Type': 'application/json',
-                                                            },
-                                                            body: JSON.stringify(pedido),
-                                                        });
-
-                                                        const text = await res.text();
-
-                                                        if (!res.ok) {
-                                                            throw new Error(text);
-                                                        }
-
-                                                        console.log(text);
-                                                        alert(text);
-                                                        setLive((): any => {
-                                                            //const pedidosAntigos = prev;
-                                                            const atualizarPedidos = live?.filter(
-                                                                (array) => array.id != pedido.id
-                                                            );
-                                                            return atualizarPedidos;
-                                                        });
-                                                    } catch (err) {
-                                                        console.error(err);
-                                                        alert('Erro ao enviar pedido');
-                                                    }
-                                                }}
+                                                onClick={async () => confirmOrder(pedido)}
                                             >
                                                 Confirmar
                                             </button>
@@ -261,14 +299,27 @@ function Delivery() {
                         </div>
                     </section>
                 </>
-            ) : section == 'pedidos' ? (
+            ) : section == 'pendentes' ? (
                 <>
-                <Consulta/>
+                    <Pendentes />
                 </>
-            ) : section == "produtos" ? (
-                <h1>Produtos</h1>
-            )
-             : "Erro"}
+            ) : section == 'produtos' ? (
+                <div className="flex gap-2 justify-center w-full px-4">
+                    <div className="flex flex-col gap-2 items-center flex-1 py-4">
+                        <h1 className="text-black font-extrabold! text-[2.5rem]!  ">Mais vendidos:</h1>
+                        <Carrosel />
+                    </div>
+                    <div className='flex-1 border border-red-600 flex flex-col justify-start items-center p-4'>
+                        <h3>teste</h3>
+                    </div>
+                </div>
+            ) : section == 'confirmados' ? (
+                <>
+                    <Concluido />
+                </>
+            ) : (
+                'Erro'
+            )}
         </div>
     );
 }

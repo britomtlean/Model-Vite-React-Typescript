@@ -24,7 +24,6 @@ type Pedido = {
 };
 
 function SignalR() {
-
     //CONTEXT
     const { setMessage, setContato, contato } = useContext(Context)!;
 
@@ -55,14 +54,16 @@ function SignalR() {
             .then(() => {
                 console.log('✅ Conectado ao SignalR');
                 const whatsapp = prompt('Digite seu whatsapp')!;
-                setContato(():any =>{connection.invoke('EntrarSala', `${whatsapp}`); return whatsapp});
+                setContato((): any => {
+                    connection.invoke('EntrarSala', `${whatsapp}`);
+                    return whatsapp;
+                });
                 //connection.invoke('EntrarSala', `${connection.connectionId}`);
-
 
                 // ESCUTA MENSAGEM DO SERVIDOR
                 connection.on('ReceiveMessage', (message: string) => {
                     console.log('📩 Servidor - ', message);
-                    setMessage(message)
+                    setMessage(message);
                 });
             })
             .catch((err) => {
@@ -102,23 +103,82 @@ function SignalR() {
         }
     }
 
-    async function pagamento(){
+    async function pagamento() {
         const res = await fetch('http://localhost:5157/api/payment', {
             method: 'POST',
         });
 
         const data = await res.json();
         window.location.href = data.url;
-
-
-
     }
-
 
     return (
         <div className="flex gap-4">
             <button onClick={pagamento}>Pagar Online</button>
             <button onClick={sendMessage}>Pagar Na Entrega</button>
+
+            <button
+                onClick={() => {
+                    const pedido: Pedido = {
+                        produtos: [
+                            {
+                                produtoId: '6a10d5b7ae6f124854579c0e',
+                                nome: 'Top Jet',
+                                quantidade: 1,
+                                valorUnitario: 10,
+                                subtotal: 10,
+                            },
+                        ],
+                        valorTotal: 15,
+                        nomeCliente: 'Teste Cliente 1',
+                        contatoCliente: contato,
+                        enderecoCliente: 'XXXXXXXX',
+                    };
+
+                    const numeroPedido = Date.now().toString().slice(-8);
+
+                    const resumoProdutos = pedido.produtos
+                        .map((p) => `📌 ${p.quantidade} x ${p.nome} - R$ ${p.subtotal.toFixed(2).replace('.', ',')}`)
+                        .join('\n');
+
+                    const mensagem = `SEU PEDIDO: LELECO HAMBURGUERIA PIRAQUÊ
+
+                        Acompanhe abaixo o pedido
+
+                        Pedido nº: #${numeroPedido}
+                        Realizado em: ${new Date().toLocaleString('pt-BR')}
+
+                        -----------------------------
+                        🍽️ RESUMO DO PEDIDO
+
+                        ${resumoProdutos}
+
+                        -----------------------------
+                        💳 PAGAMENTO
+
+                        ▪️ Taxa de Entrega: R$ 5,00
+                        ▪️ Valor Total do Pedido: R$ ${pedido.valorTotal.toFixed(2).replace('.', ',')}
+
+                        -----------------------------
+                        🏠 ENDEREÇO DE ENTREGA
+
+                        ${pedido.enderecoCliente}
+
+                        ⏲️ Previsão de Entrega: 45 a 80 minutos
+
+                        -----------------------------
+                        🤩 ${pedido.nomeCliente}
+                        📞 ${pedido.contatoCliente}
+                        💳 Crédito
+
+                        Clique no link para acompanhar seu pedido:
+                        https://seusite.com/pedido/${numeroPedido}`;
+
+                    window.open(`https://wa.me/5521970076196?text=${encodeURIComponent(mensagem)}`, '_blank');
+                }}
+            >
+                Enviar Pedido pelo WhatsApp
+            </button>
         </div>
     );
 }

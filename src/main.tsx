@@ -19,6 +19,7 @@ import Calculos from './components/Calculos.tsx';
 import Carrosel from './components/Delivery/Carrosel.tsx';
 import Sucesso from './components/Delivery/Payment/Sucesso.tsx';
 import Aguarde from './components/Delivery/Payment/Aguarde.tsx';
+import HomeDelivery from './components/Delivery/HomeDelivery.tsx';
 
 
 let router = createBrowserRouter([
@@ -70,7 +71,7 @@ let router = createBrowserRouter([
     },
     {
         path: '/delivery/',
-        element: <Delivery />,
+        element: <HomeDelivery />,
     },
     {
         path: '/carrosel/',

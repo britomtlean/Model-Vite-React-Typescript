@@ -13,10 +13,7 @@ declare global {
 }
 
 function Delivery() {
-
-    //NAVEGAÇÃO
-    const [section, setSection] = useState<string>('live');
-
+    
     /////////////////////// AUDIO \\\\\\\\\\\\\\\\\\\\\\\\\\\
 
     const [sala, setSala] = useState<string>('');
@@ -171,9 +168,7 @@ function Delivery() {
             alert(data);
 
             setLive((): any => {
-                const atualizarPedidos = live?.filter(
-                    (array) => array.id != pedido.id
-                );
+                const atualizarPedidos = live?.filter((array) => array.id != pedido.id);
                 return atualizarPedidos;
             });
         } catch (err) {
@@ -184,146 +179,89 @@ function Delivery() {
     ///////////////////////////////////////////////////////////
 
     return (
-        <div className="h-screen w-full overflow-hidden  bg-gradient-to-b from-[rgb(96,167,167)] to-[rgb(105,168,126)] flex flex-col items-center font-sans">
-            <header className="w-full h-[10vh] py-4 px-[20%] mb-[30px] flex justify-between items-center bg-[rgb(48,83,83)]">
-                <h1 className="text-4xl! font-bold text-[#ccc] font-bold">Menu</h1>
+        <div className="h-full w-full overflow-hidden flex flex-col items-center">
+            <>
+                <button
+                    className="mb-23 rounded-lg bg-red-500! px-4 py-2 text-base font-bold text-white active:scale-95"
+                    onClick={ativarSom}
+                >
+                    Ativar Som
+                </button>
 
-                <ul className="flex items-center">
-                    <li
-                        onClick={() => setSection('live')}
-                        className="ml-[30px] list-none cursor-pointer text-[1.3rem] font-bold! text-[#ccc] transition-all hover:border-b hover:border-red-500 hover:text-red-500"
-                    >
-                        Live
-                    </li>
-
-                    <li
-                        onClick={() => setSection('pendentes')}
-                        className="ml-[30px] list-none cursor-pointer text-[1.3rem] font-bold! text-[#ccc] transition-all hover:border-b  hover:border-red-500 hover:text-red-500"
-                    >
-                        Pendentes
-                    </li>
-
-                    <li
-                        onClick={() => setSection('confirmados')}
-                        className="ml-[30px] list-none cursor-pointer text-[1.3rem] font-bold! text-[#ccc] transition-all hover:border-b  hover:border-red-500 hover:text-red-500"
-                    >
-                        Confirmados
-                    </li>
-
-                    <li
-                        onClick={() => setSection('produtos')}
-                        className="ml-[30px] list-none cursor-pointer text-[1.3rem] font-bold! text-[#ccc] transition-all hover:border-b  hover:border-red-500 hover:text-red-500"
-                    >
-                        Produtos
-                    </li>
-                </ul>
-            </header>
-            {section == 'live' ? (
-                <>
-                    <button
-                        className="mb-23 rounded-lg bg-red-500! px-4 py-2 text-base font-bold text-white active:scale-95"
-                        onClick={ativarSom}
-                    >
-                        Ativar Som
-                    </button>
-
-                    <section className="flex w-[90%] flex-col items-center">
-                        <h1
-                            className="
+                <section className="flex w-[90%] flex-col items-center">
+                    <h1
+                        className="
                                 text-3xl
                                 font-extrabold!
                                 animate-[led_8s_linear_infinite]
                             "
-                        >
-                            LIVE
-                        </h1>
+                    >
+                        LIVE
+                    </h1>
 
-                        <div
-                            id="mensagens"
-                            className="mt-6 mb-6 flex h-[48vh] w-[50%] flex-col gap-3 overflow-y-auto rounded-2xl border border-white/10 bg-slate-200/40 p-10 py-8 shadow-lg backdrop-blur-md"
-                        >
-                            {[...(live || [])].reverse().map((pedido) => (
-                                <div
-                                    key={pedido.id}
-                                    className="rounded-xl border border-white/10 bg-[rgb(48,83,83)]/30 p-4 transition-all duration-200 hover:bg-black/30"
-                                >
-                                    {/* Header */}
-                                    <div className="mb-3 flex items-center justify-between border-b border-white/10 pb-2">
-                                        <h2 className="text-sm font-semibold text-black">Pedido #{pedido.id}</h2>
+                    <div
+                        id="mensagens"
+                        className="mt-6 mb-6 flex h-[48vh] w-[50%] flex-col gap-3 overflow-y-auto rounded-2xl border border-white/10 bg-slate-200/40 p-10 py-8 shadow-lg backdrop-blur-md"
+                    >
+                        {[...(live || [])].reverse().map((pedido) => (
+                            <div
+                                key={pedido.id}
+                                className="rounded-xl border border-white/10 bg-[rgb(48,83,83)]/30 p-4 transition-all duration-200 hover:bg-black/30"
+                            >
+                                {/* Header */}
+                                <div className="mb-3 flex items-center justify-between border-b border-white/10 pb-2">
+                                    <h2 className="text-sm font-semibold text-black">Pedido #{pedido.id}</h2>
 
-                                        <span className="rounded-md bg-red-500 px-2 py-1 text-xs font-medium text-green-300">
-                                            Novo
-                                        </span>
-                                    </div>
-
-                                    {/* Produtos */}
-                                    <ul className="flex flex-col gap-2">
-                                        {pedido.produtos?.map((produto: any) => (
-                                            <li
-                                                key={produto.produtoId}
-                                                className="flex items-center justify-between rounded-lg bg-white/20  px-3 py-2"
-                                            >
-                                                <div className="flex flex-col">
-                                                    <strong className="text-sm text-black">{produto.nome}</strong>
-
-                                                    <span className="text-xs text-black-400">
-                                                        Qtd: {produto.quantidade}
-                                                    </span>
-                                                </div>
-
-                                                <span className="text-sm font-semibold text-green-300">
-                                                    R$ {produto.subtotal}
-                                                </span>
-                                            </li>
-                                        ))}
-                                        <div className="flex justify-between items-center gap-24 mt-2 px-8">
-                                            <button
-                                                className="flex-1"
-                                                onClick={async () => {
-                                                    cancelOrder(pedido);
-                                                }}
-                                            >
-                                                Cancelar
-                                            </button>
-
-                                            <button
-                                                className="flex-1 bg-[rgb(025,168,106)]!"
-                                                onClick={async () => confirmOrder(pedido)}
-                                            >
-                                                Confirmar
-                                            </button>
-                                        </div>
-                                    </ul>
+                                    <span className="rounded-md bg-red-500 px-2 py-1 text-xs font-medium text-green-300">
+                                        Novo
+                                    </span>
                                 </div>
-                            ))}
-                        </div>
-                    </section>
-                </>
-            ) : section == 'pendentes' ? (
-                <>
-                    <Pendentes />
-                </>
-            ) : section == 'produtos' ? (
-                <div className="flex gap-2 justify-center w-full px-4">
-                    <div className="flex flex-col gap-2 items-center flex-1 py-4">
-                        <h1 className="text-black font-extrabold! text-[2.5rem]!  ">Mais vendidos:</h1>
-                        <Carrosel />
+
+                                {/* Produtos */}
+                                <ul className="flex flex-col gap-2">
+                                    {pedido.produtos?.map((produto: any) => (
+                                        <li
+                                            key={produto.produtoId}
+                                            className="flex items-center justify-between rounded-lg bg-white/20  px-3 py-2"
+                                        >
+                                            <div className="flex flex-col">
+                                                <strong className="text-sm text-black">{produto.nome}</strong>
+
+                                                <span className="text-xs text-black-400">
+                                                    Qtd: {produto.quantidade}
+                                                </span>
+                                            </div>
+
+                                            <span className="text-sm font-semibold text-green-300">
+                                                R$ {produto.subtotal}
+                                            </span>
+                                        </li>
+                                    ))}
+                                    <div className="flex justify-between items-center gap-24 mt-2 px-8">
+                                        <button
+                                            className="flex-1"
+                                            onClick={async () => {
+                                                cancelOrder(pedido);
+                                            }}
+                                        >
+                                            Cancelar
+                                        </button>
+
+                                        <button
+                                            className="flex-1 bg-[rgb(025,168,106)]!"
+                                            onClick={async () => confirmOrder(pedido)}
+                                        >
+                                            Confirmar
+                                        </button>
+                                    </div>
+                                </ul>
+                            </div>
+                        ))}
                     </div>
-                    <div className='flex-1 border border-red-600 flex flex-col justify-start items-center p-4'>
-                        <h3>teste</h3>
-                    </div>
-                </div>
-            ) : section == 'confirmados' ? (
-                <>
-                    <Concluido />
-                </>
-            ) : (
-                'Erro'
-            )}
+                </section>
+            </>
         </div>
     );
 }
-
-
 
 export default Delivery;

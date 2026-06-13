@@ -8,6 +8,10 @@
     align-items: center;
     min-width: 320px;
     min-height: 100vh;
+    @apply h-screen w-full overflow-hidden
+    /*bg-gradient-to-b from-[rgb(96,167,167)] to-[rgb(105,168,126)]*/
+    bg-radial from-blue-400/50 to-blue-500/80
+    flex flex-col items-center font-sans
 }
 
 h1 {

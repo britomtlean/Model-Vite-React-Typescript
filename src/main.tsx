@@ -67,15 +67,15 @@ let router = createBrowserRouter([
                 path: '/calculos',
                 element: <Calculos />,
             },
+            {
+                path: '/carrosel/',
+                element: <Carrosel />,
+            },
         ],
     },
     {
         path: '/delivery/',
         element: <HomeDelivery />,
-    },
-    {
-        path: '/carrosel/',
-        element: <Carrosel />,
     },
 ]);
 

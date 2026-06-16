@@ -37,8 +37,8 @@ const Home = ({ nome, id, children }: Props) => {
                     <Link className="bg-slate-300 p-2 rounded-2xl w-25 text-center" to={`/signalr`}>
                         SignalR
                     </Link>
-                    <Link className="bg-slate-300 p-2 rounded-2xl w-25 text-center" to={`/delivery`}>
-                        Delivery
+                    <Link className="bg-slate-300 p-2 rounded-2xl w-25 text-center" to={`/carrosel`}>
+                        Carrosel
                     </Link>
                 </nav>
                 <ul className="flex flex-row gap-4 items-center justify-center text-white font-black">
@@ -48,7 +48,7 @@ const Home = ({ nome, id, children }: Props) => {
             </header>
 
             <div
-                className={`flex flex-col justify-center items-center w-full min-h-screen ${
+                className={`flex flex-col justify-center items-center w-full min-h-screen pt-[100px] ${
                     theme === 'Default' ? 'bg-gray-500' : 'bg-gray-900'
                 }`}
             >

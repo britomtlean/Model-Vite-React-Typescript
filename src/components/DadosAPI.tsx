@@ -29,7 +29,7 @@ const DadosAPI = () => {
                         </div>
                         <div className='border p-2 rounded-2xl bg-gray-300'>
                             <h2 className="font-bold text-2xl">
-                                Valor do Carrinho:{' '}
+                                 Valor do Carrinho:{' '}
                                 {cart.total.toLocaleString('pt-BR', {
                                     style: 'currency',
                                     currency: 'BRL',

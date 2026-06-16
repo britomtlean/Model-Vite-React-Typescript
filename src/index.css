@@ -6,7 +6,6 @@
     flex-direction: column;
     justify-items: center;
     align-items: center;
-    min-width: 320px;
     min-height: 100vh;
     @apply h-screen w-full overflow-hidden
     /*bg-gradient-to-b from-[rgb(96,167,167)] to-[rgb(105,168,126)]*/

@@ -15,7 +15,7 @@ function App() {
     return (
         <>
             <Home nome={user} id={67}>
-                <h1 className='animate-bounce m-4'>{message}</h1>
+                {/**? <h1 className='animate-bounce m-4'>{message}</h1> */}
                 <Outlet />
             </Home>
         </>

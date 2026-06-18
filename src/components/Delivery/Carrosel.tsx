@@ -1,5 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import { FaAngleRight } from 'react-icons/fa';
+import { FaAngleLeft } from 'react-icons/fa';
 
 type Produto = {
     produtoId: string;
@@ -10,112 +12,138 @@ type Produto = {
     subtotal: number;
     categoria: string;
     imagem: string;
-    id?: string
-};
-
-type Pedido = {
-    produtos: Produto[];
-    valorTotal: number;
-    nomeCliente: string;
-    contatoCliente: string;
-    enderecoCliente: string;
+    id?: string;
 };
 
 const Carrosel = () => {
-
     // PRODUCTS
     const [produtos, setProdutos] = useState<Array<Produto> | null>(null);
     const [firstProduct, setFirstProduct] = useState<Produto | null>(null);
 
+    //REF
+    const oneRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
 
-      const getProducts = async () =>
-        {
-          const res = await fetch('http://localhost:5157/api/Produtos');
-          const data = await res.json();
-          setProdutos(() =>{console.log(data); return data})
-        }
+        const getProducts = async () => {
+            const res = await fetch('http://localhost:5157/api/Produtos');
+            const data = await res.json();
+            setProdutos(() => {
+                console.log(data);
+                return data;
+            });
+        };
 
-      getProducts();
-    },[])
+        getProducts();
+    }, []);
 
     useEffect(() => {
-      if (!produtos) return;
+        if (!produtos) return;
 
-      setFirstProduct(produtos.find((arr, index) => index == 0 )!)
+        setFirstProduct(produtos.find((arr, index) => index == 0)!);
+
     }, [produtos]);
 
     const nextProduct = () => {
-      if(!produtos) return
+        if (!produtos) return;
 
-      const first: Produto = produtos[0];
-      const fila: Array<Produto> = produtos.filter((array, index) => index != 0);
-      const newArray: Array<Produto> = [...fila, first];
+        if (oneRef.current) {
+            // Sai pela esquerda
+            oneRef.current.style.transition = 'transform 0.5s ease'; //animação
+            oneRef.current.style.transform = 'translateX(-100vw)';
 
-      setProdutos(newArray);
+            setTimeout(() => {
+
+                if (!oneRef.current) return;
+
+                // Vai para a direita sem animação
+                oneRef.current.style.transition = 'none';
+                oneRef.current.style.transform = 'translateX(100vw)';
+
+                // Força reflow
+                void oneRef.current.offsetWidth;
+
+                // Retorna para o centro animando
+                oneRef.current.style.transition = 'transform 0.5s ease';
+                oneRef.current.style.transform = 'translateX(0)';
+
+                const first: Produto = produtos[0];
+                const fila: Array<Produto> = produtos.filter((array, index) => index != 0);
+                const newArray: Array<Produto> = [...fila, first];
+
+                setProdutos(newArray);
+
+            }, 500);
+        }
     };
 
     const returnProduct = () => {
-      if (!produtos) return;
 
-      const last: Produto = produtos[produtos?.length! - 1];
-      const fila: Array<Produto> = produtos?.filter((array, index) => index != produtos?.length! - 1);
-      const newArray: Array<Produto> = [last, ...fila];
+        if (!produtos || !oneRef.current) return;
 
-      setProdutos(newArray);
+        oneRef.current.style.transition = 'transform 0.5s ease'; //animação
+        oneRef.current.style.transform = 'translateX(100vw)';
+
+        setTimeout(() => {
+            if (!oneRef.current) return;
+
+            // Vai para a direita sem animação
+            oneRef.current.style.transition = 'none';
+            oneRef.current.style.transform = 'translateX(-100vw)';
+
+            // Força reflow
+            void oneRef.current.offsetWidth;
+
+            // Retorna para o centro animando
+            oneRef.current.style.transition = 'transform 0.5s ease';
+            oneRef.current.style.transform = 'translateX(0)';
+
+        const last: Produto = produtos[produtos?.length! - 1];
+        const fila: Array<Produto> = produtos?.filter((array, index) => index != produtos?.length! - 1);
+        const newArray: Array<Produto> = [last, ...fila];
+
+        setProdutos(newArray);
+        }, 500);
     };
 
-
-      const [busca, setBusca] = useState<string>('');
-
-      const dadosFiltrados = produtos?.filter((item) => {
-          const texto = busca.toLowerCase();
-
-              return item.nome.toLowerCase().includes(texto) || String(item.valor).includes(texto);
-
-
-          return false;
-      });
-
-
-  return (
-      <div className="grid grid-cols-5 grid-rows-5 w-full h-full px-50 py-5 border-t-2 border-white gap-y-5 gap-x-1">
-          <div
-              className="w-4/5 h-full flex justify-center items-center col-span-2 row-span-2
+    return (
+        <div className="flex justify-center items-center w-full h-full px-50 py-5 border-t-2 border-white gap-y-5 gap-x-1">
+            <div
+                ref={oneRef}
+                className="w-2/5 h-1/2 flex justify-center items-center col-span-5 row-span-2 gap-4
           shadow-xl/30 border-cyan-400 shadow-[0_0_80px_2px_rgba(100,197,223,0.5)] inset-shadow-sm border"
-          >
-              <button
-                  className="flex-1! h-full border-l-0! rounded-r-[0]! bg-black-300/50!"
-                  onClick={returnProduct}
-              ></button>
+            >
+                <button className="flex-1! h-full border-l-0! rounded-r-[0]! bg-black-300/50!" onClick={nextProduct}>
+                    <FaAngleLeft className="text-3xl" />
+                </button>
 
-              <div className="flex-8 flex flex-col justify-center items-center h-full bg-gray-200/10 p-4">
-                  {firstProduct == null ? (
-                      'Carregando...'
-                  ) : (
-                      <>
-                          <img
-                              className="flex-5 min-w-3/4 max-h-[180px] rounded-3xl"
-                              src={`http://localhost:5157/images/${firstProduct.imagem}`}
-                              alt=""
-                          />
-                          <h2 className="flex-1 text-black! text-[1.8rem]! font-extrabold">{firstProduct.nome}</h2>
-                          <h2 className="flex-1 text-black! text-[1.2rem]! font-medium">{firstProduct.descricao}</h2>
-                          <h2 className="flex-1 text-black! text-[1.5rem]! font-medium">{firstProduct.valor}</h2>
-                          <a className="text-[1.2rem]" href="">
-                              Detalhes
-                          </a>
-                      </>
-                  )}
-              </div>
+                <div className="flex-5 flex flex-col justify-center items-center h-full bg-gray-200/10 p-4">
+                    {firstProduct == null ? (
+                        'Carregando...'
+                    ) : (
+                        <>
+                            <img
+                                className="flex-5 min-w-3/4 max-h-[180px] rounded-3xl"
+                                src={`http://localhost:5157/images/${firstProduct.imagem}`}
+                                alt=""
+                            />
+                            <h2 className="flex-1 text-black! text-[1.8rem]! font-extrabold">{firstProduct.nome}</h2>
+                            <h2 className="flex-1 text-black! text-[1.2rem]! font-medium">{firstProduct.descricao}</h2>
+                            <h2 className="flex-1 text-black! text-[1.5rem]! font-medium">{firstProduct.valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+}</h2>
+                            <a className="text-[1.2rem]" href="">
+                                Detalhes
+                            </a>
+                        </>
+                    )}
+                </div>
 
-              <button
-                  className="flex-1 h-full bg-black-300/50! border-r-0! rounded-l-[0]!"
-                  onClick={nextProduct}
-              ></button>
-          </div>
+                <button className="flex-1 h-full bg-black-300/50! border-r-0! rounded-l-[0]!" onClick={returnProduct}>
+                    <FaAngleRight className="text-3xl" />
+                </button>
+            </div>
 
+            {/*
           <div
               className="p-10 w-full h-full
               col-span-3 row-span-3 flex flex-col justify-start items-center
@@ -154,14 +182,9 @@ const Carrosel = () => {
                   ))}
               </div>
           </div>
+*/}
+        </div>
+    );
+};
 
-          <div className="p-10 bg-slate-800/50 w-4/5 h-3/8 flex justify-center items-center col-span-2 rounded ">
-              <h2 className="text-2xl">Mensagem de teste</h2>
-          </div>
-          <button className="h-1/2 w-full col-span-3 col-start-3 row-start-4 bg-blue-500!">Novo Produto</button>
-
-      </div>
-  );
-}
-
-export default Carrosel
+export default Carrosel;

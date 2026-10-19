@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { Context } from '../context/ContextProvider';
 import { FaBeer } from 'react-icons/fa';
 import { BiUser } from 'react-icons/bi';
+import Carrosel from './Delivery/Carrosel';
 
 type Props = {
     nome: string;
@@ -27,7 +28,7 @@ const Home = ({ nome, id, children }: Props) => {
                     <FaBeer className="text-5xl text-white" />
                 </h1>
 
-                <nav className="flex justify-center gap-6">
+                <nav className="hidden justify-center gap-6">
                     <Link className="bg-slate-300 p-2 rounded-2xl w-25 text-center" to={'/api/dadosapi'}>
                         Dados API
                     </Link>
@@ -64,7 +65,10 @@ const Home = ({ nome, id, children }: Props) => {
                     flex flex-col justify-center items-center
                     ${theme === false ? 'bg-gray-500' : 'bg-gray-900'}`}
             >
-                {children}
+                {
+                //children
+                }
+                <Carrosel/>
             </div>
         </>
     );

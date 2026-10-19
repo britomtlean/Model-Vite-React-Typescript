@@ -9,7 +9,6 @@ import Ref from './components/Ref.tsx';
 import Search from './components/Search.tsx';
 import State from './components/State.tsx';
 import SignalR from './components/Delivery/SignalR.tsx';
-import Delivery from './components/Delivery/Delivery.tsx';
 //CONTEXT
 import { ContextProvider } from './context/ContextProvider';
 import Effect from './components/Effect.tsx';

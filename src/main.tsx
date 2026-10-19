@@ -20,7 +20,6 @@ import Carrosel from './components/Delivery/Carrosel.tsx';
 import Sucesso from './components/Delivery/Payment/Sucesso.tsx';
 import Aguarde from './components/Delivery/Payment/Aguarde.tsx';
 import HomeDelivery from './components/Delivery/HomeDelivery.tsx';
-import Carrosel2 from './components/Carrosel2.tsx';
 
 
 let router = createBrowserRouter([

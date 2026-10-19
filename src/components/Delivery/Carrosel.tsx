@@ -112,7 +112,7 @@ const Carrosel = () => {
 
                             <form
                                 action=""
-                                className="2xl:w-[30%] 2xl:h-[70%] bg-radial from-gray-300/50 to-gray-400/80 rounded-2xl
+                                className="hidden 2xl:w-[30%] 2xl:h-[70%] bg-radial from-gray-300/50 to-gray-400/80 rounded-2xl
                                 shadow-xl/30 shadow-[0_0_80px_2px_rgba(0,7,223,0.3)] inset-shadow-sm"
                             ></form>
                         </>

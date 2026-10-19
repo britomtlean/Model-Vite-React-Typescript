@@ -19,9 +19,9 @@ const Home = ({ nome, id, children }: Props) => {
     return (
         <>
             <header
-                className={`w-full h-[10vh] py-5 lg:px-20 2xl:px-40  fixed top-0 z-100
+                className={`w-full h-[10vh] py-5 lg:px-20 2xl:px-40 text-[0.8rem] fixed top-0 z-100
                 flex justify-around items-center
-                ${theme === false ? 'bg-gray-600 text-gray-800' : 'bg-gray-950 text-black'}`}
+                ${/*theme === false ? 'bg-gray-500' : 'bg-gray-900'*/ ''}`}
             >
                 <h1>
                     {' '}
@@ -51,6 +51,7 @@ const Home = ({ nome, id, children }: Props) => {
                     <li>ID: {id}</li>
                     <BiUser className="size-8" />
                     <button
+                        className="hidden"
                         onClick={() => {
                             setTheme(!theme);
                         }}
@@ -61,14 +62,14 @@ const Home = ({ nome, id, children }: Props) => {
             </header>
 
             <div
-                className={`w-full min-h-screen pt-[10vh]
+                className={`w-full min-h-screen
                     flex flex-col justify-center items-center
-                    ${theme === false ? 'bg-gray-500' : 'bg-gray-900'}`}
+                    ${/*theme === false ? 'bg-gray-500' : 'bg-gray-900'*/ ''}`}
             >
                 {
-                //children
+                    //children
                 }
-                <Carrosel/>
+                <Carrosel />
             </div>
         </>
     );

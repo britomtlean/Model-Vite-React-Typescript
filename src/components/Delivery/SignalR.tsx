@@ -38,7 +38,7 @@ function SignalR() {
         setMessage('SignalR');
 
         const newConnection = new HubConnectionBuilder()
-            .withUrl('http://localhost:5157/chat')
+            .withUrl('https://dotnet-webapi-base-production.up.railway.app/chat')
             .withAutomaticReconnect()
             .build();
 
@@ -63,6 +63,7 @@ function SignalR() {
                 // ESCUTA MENSAGEM DO SERVIDOR
                 connection.on('ReceiveMessage', (message: string) => {
                     console.log('📩 Servidor - ', message);
+                    alert(JSON.stringify(message));
                     setMessage(message);
                 });
             })
@@ -87,6 +88,20 @@ function SignalR() {
                     valorUnitario: 0,
                     subtotal: 0,
                 },
+                {
+                    produtoId: '6a336ac6ed7b6b3f3340249b',
+                    nome: 'Spray Preto Brilhante',
+                    quantidade: 500,
+                    valorUnitario: 10,
+                    subtotal: 5000,
+                },
+                {
+                    produtoId: '6a10d5a2ae6f124854579c0d',
+                    nome: 'Advanced',
+                    quantidade: 2,
+                    valorUnitario: 50,
+                    subtotal: 100,
+                },
             ],
             valorTotal: 0,
             nomeCliente: 'Teste Cliente 1',
@@ -104,11 +119,31 @@ function SignalR() {
     }
 
     async function pagamento() {
-        const res = await fetch('http://localhost:5157/api/payment', {
+        const pedido: Pedido = {
+            produtos: [
+                {
+                    produtoId: '6a10d5b7ae6f124854579c0e',
+                    nome: 'Top Jet',
+                    quantidade: 3,
+                    valorUnitario: 10,
+                    subtotal: 30,
+                },
+            ],
+            valorTotal: 0,
+            nomeCliente: 'Teste Cliente 1',
+            contatoCliente: contato,
+            enderecoCliente: 'XXXXXXXX',
+        };
+
+        const res = await fetch('https://dotnet-webapi-base-production.up.railway.app/api/payment', {
             method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(pedido),
         });
 
         const data = await res.json();
+        console.log(data);
+        if (!res.ok) return;
         window.location.href = data.url;
     }
 

@@ -17,8 +17,8 @@ const DadosAPI = () => {
             .catch((error) => console.error(error));
     }, []);
     return (
-        <>
-            <div className="bg-gray-400/10 rounded-2xl flex flex-col justify-start items-center w-[90vw] max-h-[70vh] overflow-scroll px-4">
+        <div className='w-full h-full flex justify-center py-10'>
+            <div className="bg-gray-400/0 rounded-2xl flex flex-col justify-start items-center w-[90vw] h-full overflow-scroll">
                 {dados?.carts.map((cart) => (
                     <div
                         className="bg-gray-300/80 border-b rounded-xl flex flex-col justify-start items-center w-[50vw] gap-4"
@@ -61,7 +61,7 @@ const DadosAPI = () => {
                     </div>
                 ))}
             </div>
-        </>
+        </div>
     );
 };
 

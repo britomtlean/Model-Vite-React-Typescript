@@ -1,47 +1,19 @@
 import { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
 import { FaAngleRight } from 'react-icons/fa';
 import { FaAngleLeft } from 'react-icons/fa';
 
-type Produto = {
-    produtoId: string;
-    nome: string;
-    descricao: string;
-    quantidade: number;
-    valor: number;
-    subtotal: number;
-    categoria: string;
-    imagem: string;
-    id?: string;
-};
-
 const Carrosel = () => {
     // PRODUCTS
-    const [produtos, setProdutos] = useState<Array<Produto> | null>(null);
-    const [firstProduct, setFirstProduct] = useState<Produto | null>(null);
+    const [produtos, setProdutos] = useState<Array<Record<string, any>> | null>([]);
+    const [firstProduct, setFirstProduct] = useState<Record<string, any> | null>(null);
 
     //REF
     const oneRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
-
-        const getProducts = async () => {
-            const res = await fetch('http://localhost:5157/api/Produtos');
-            const data = await res.json();
-            setProdutos(() => {
-                console.log(data);
-                return data;
-            });
-        };
-
-        getProducts();
-    }, []);
-
-    useEffect(() => {
         if (!produtos) return;
 
         setFirstProduct(produtos.find((arr, index) => index == 0)!);
-
     }, [produtos]);
 
     const nextProduct = () => {
@@ -53,7 +25,6 @@ const Carrosel = () => {
             oneRef.current.style.transform = 'translateX(-100vw)';
 
             setTimeout(() => {
-
                 if (!oneRef.current) return;
 
                 // Vai para a direita sem animação
@@ -67,18 +38,16 @@ const Carrosel = () => {
                 oneRef.current.style.transition = 'transform 0.5s ease';
                 oneRef.current.style.transform = 'translateX(0)';
 
-                const first: Produto = produtos[0];
-                const fila: Array<Produto> = produtos.filter((array, index) => index != 0);
-                const newArray: Array<Produto> = [...fila, first];
+                const first: Record<string, any> = produtos[0];
+                const fila: Array<Record<string, any>> = produtos.filter((array, index) => index != 0);
+                const newArray: Array<Record<string, any>> = [...fila, first];
 
                 setProdutos(newArray);
-
             }, 500);
         }
     };
 
     const returnProduct = () => {
-
         if (!produtos || !oneRef.current) return;
 
         oneRef.current.style.transition = 'transform 0.5s ease'; //animação
@@ -98,91 +67,65 @@ const Carrosel = () => {
             oneRef.current.style.transition = 'transform 0.5s ease';
             oneRef.current.style.transform = 'translateX(0)';
 
-        const last: Produto = produtos[produtos?.length! - 1];
-        const fila: Array<Produto> = produtos?.filter((array, index) => index != produtos?.length! - 1);
-        const newArray: Array<Produto> = [last, ...fila];
+            const last: Record<string, any> = produtos[produtos?.length! - 1];
+            const fila: Array<Record<string, any>> = produtos?.filter((array, index) => index != produtos?.length! - 1);
+            const newArray: Array<Record<string, any>> = [last, ...fila];
 
-        setProdutos(newArray);
+            setProdutos(newArray);
         }, 500);
     };
 
     return (
-        <div className="flex justify-center items-center w-full h-full px-50 py-5 border-t-2 border-white gap-y-5 gap-x-1">
-            <div
-                ref={oneRef}
-                className="w-2/5 h-1/2 flex justify-center items-center col-span-5 row-span-2 gap-4
-          shadow-xl/30 border-cyan-400 shadow-[0_0_80px_2px_rgba(100,197,223,0.5)] inset-shadow-sm border"
+        <div
+            ref={oneRef}
+            className="w-full h-full
+                 flex flex-col justify-center items-center col-span-5 row-span-2 gap-4 relative rounded-lg
+                shadow-xl/30 shadow-[0_0_80px_2px_rgba(0,7,223,0.1)] inset-shadow-sm
+    bg-center [mask-image:linear-gradient(to_top,transparent_0%,black_0%,black_100%,transparent_100%)]
+                after:content-[''] after:absolute after:inset-0 after:bg-radial after:from-gray-900/30 after:to-[#0d171fdc]
+                after:[mask-image:linear-gradient(to_top,transparent_0%,black_0%,black_90%,transparent_100%)]
+"
+            style={{
+                //Imagem aqui
+                backgroundImage: `url(${'https://img.magnific.com/fotos-premium/globo-da-terra-a-noite-elementos-desta-imagem-fornecidos-pela-nasa-renderizacao-3d_924688-4494.jpg?semt=ais_hybrid&w=740&q=80'})`,
+            }}
+        >
+            <button
+                className="z-50 md:w-14 h-14 bg-black/80 rounded-[100%] flex justify-center items-center absolute left-[2%]"
+                onClick={nextProduct}
             >
-                <button className="flex-1! h-full border-l-0! rounded-r-[0]! bg-black-300/50!" onClick={nextProduct}>
-                    <FaAngleLeft className="text-3xl" />
-                </button>
-
-                <div className="flex-5 flex flex-col justify-center items-center h-full bg-gray-200/10 p-4">
-                    {firstProduct == null ? (
-                        'Carregando...'
-                    ) : (
+                <FaAngleLeft className="text-white text-4xl w-full" />
+            </button>
+            <div
+                className="w-full h-full  bg-radial from-gray-500/80 to-black
+                flex flex-col justify-start items-center
+                "
+            >
+                <div
+                    className="w-full h-full p-5
+                flex flex-col justify-center items-center gap-5"
+                >
+                    {
+                        //Conteudo aqui
                         <>
-                            <img
-                                className="flex-5 min-w-3/4 max-h-[180px] rounded-3xl"
-                                src={`http://localhost:5157/images/${firstProduct.imagem}`}
-                                alt=""
-                            />
-                            <h2 className="flex-1 text-black! text-[1.8rem]! font-extrabold">{firstProduct.nome}</h2>
-                            <h2 className="flex-1 text-black! text-[1.2rem]! font-medium">{firstProduct.descricao}</h2>
-                            <h2 className="flex-1 text-black! text-[1.5rem]! font-medium">{firstProduct.valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
-}</h2>
-                            <a className="text-[1.2rem]" href="">
-                                Detalhes
-                            </a>
-                        </>
-                    )}
-                </div>
+                            <h1 className="z-100 font-bold text-4xl!">Seu conteudo aqui</h1>
 
-                <button className="flex-1 h-full bg-black-300/50! border-r-0! rounded-l-[0]!" onClick={returnProduct}>
-                    <FaAngleRight className="text-3xl" />
-                </button>
+                            <form
+                                action=""
+                                className="2xl:w-[30%] 2xl:h-[70%] bg-radial from-gray-300/50 to-gray-400/80 rounded-2xl
+                                shadow-xl/30 shadow-[0_0_80px_2px_rgba(0,7,223,0.3)] inset-shadow-sm"
+                            ></form>
+                        </>
+                    }
+                </div>
             </div>
 
-            {/*
-          <div
-              className="p-10 w-full h-full
-              col-span-3 row-span-3 flex flex-col justify-start items-center
-              font-bold text-center
-              rounded bg-radial from-blue-400/30 to-blue-500/30
-              shadow-xl/30 border-cyan-400 shadow-[0_0_80px_2px_rgba(100,197,223,0.5)] inset-shadow-sm border"
-          >
-              <input
-                  type="text"
-                  placeholder="Buscar..."
-                  value={busca}
-                  onChange={(e) => setBusca(e.target.value)}
-                  className="my-4 px-4 py-2 rounded w-full text-[16px] font-normal shadow bg-sky-200"
-              />
-              <ul className="w-full grid grid-cols-3 py-2 bg-slate-300">
-                  <li>Nome</li>
-                  <li>Valor</li>
-                  <li>Dados</li>
-              </ul>
-              <div className="w-full overflow-y-scroll">
-                  {dadosFiltrados?.map((item) => (
-                      <ul
-                          className="grid grid-rows-2 grid-cols-3
-                          w-full py-3 bg-blue-300 border-b border-white
-                          font-light hover:bg-white "
-                          key={item.id}
-                      >
-                          <>
-                              <li>{item.nome}</li>
-                              <li>R$ {item.valor}</li>
-                              <Link to={`/painel/${''}`} className="hover:cursor-pointer">
-                                  Detalhes
-                              </Link>
-                          </>
-                      </ul>
-                  ))}
-              </div>
-          </div>
-*/}
+            <button
+                className="z-50 md:w-14 h-14 bg-black/80 rounded-[100%] flex justify-center items-center absolute right-[2%]"
+                onClick={returnProduct}
+            >
+                <FaAngleRight className="text-white text-4xl w-full" />
+            </button>
         </div>
     );
 };

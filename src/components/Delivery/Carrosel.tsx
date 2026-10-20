@@ -81,20 +81,20 @@ const Carrosel = () => {
             className="w-full h-full
                  flex flex-col justify-center items-center col-span-5 row-span-2 gap-4 relative rounded-lg
                 shadow-xl/30 shadow-[0_0_80px_2px_rgba(0,7,223,0.1)] inset-shadow-sm
-    bg-center [mask-image:linear-gradient(to_top,transparent_0%,black_0%,black_100%,transparent_100%)]
+                 bg-center [mask-image:linear-gradient(to_top,transparent_0%,black_0%,black_100%,transparent_100%)]
                 after:content-[''] after:absolute after:inset-0 after:bg-radial after:from-gray-900/30 after:to-[#0d171fdc]
                 after:[mask-image:linear-gradient(to_top,transparent_0%,black_0%,black_90%,transparent_100%)]
-"
+                "
             style={{
                 //Imagem aqui
                 backgroundImage: `url(${'https://img.magnific.com/fotos-premium/globo-da-terra-a-noite-elementos-desta-imagem-fornecidos-pela-nasa-renderizacao-3d_924688-4494.jpg?semt=ais_hybrid&w=740&q=80'})`,
             }}
         >
             <button
-                className="z-50 md:w-14 h-14 bg-black/80 rounded-[100%] flex justify-center items-center absolute left-[2%]"
+                className="z-50 w-[12vw] lg:w-14 lg:h-14 bg-black/80 rounded-[100%] flex justify-center items-center absolute left-[2%]"
                 onClick={nextProduct}
             >
-                <FaAngleLeft className="text-white text-4xl w-full" />
+                <FaAngleLeft className="text-white lg:text-4xl w-full" />
             </button>
             <div
                 className="w-full h-full  bg-radial from-gray-500/80 to-black
@@ -108,7 +108,7 @@ const Carrosel = () => {
                     {
                         //Conteudo aqui
                         <>
-                            <h1 className="z-100 font-bold text-4xl!">Seu conteudo aqui</h1>
+                            <h1 className="z-100 font-bold text-2xl! lg:text-4xl!">Seu conteudo aqui</h1>
 
                             <form
                                 action=""
@@ -121,10 +121,10 @@ const Carrosel = () => {
             </div>
 
             <button
-                className="z-50 md:w-14 h-14 bg-black/80 rounded-[100%] flex justify-center items-center absolute right-[2%]"
+                className="z-50 w-[12vw] lg:w-14 lg:h-14 bg-black/80 rounded-[100%] flex justify-center items-center absolute right-[2%]"
                 onClick={returnProduct}
             >
-                <FaAngleRight className="text-white text-4xl w-full" />
+                <FaAngleRight className="text-white lg:text-4xl w-full" />
             </button>
         </div>
     );
